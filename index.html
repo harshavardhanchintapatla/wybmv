@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will you be my Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fce4ec;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        #display-image {
+            width: 200px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            min-height: 50px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #yes-btn {
+            background-color: #e91e63;
+            color: white;
+        }
+
+        #yes-btn:hover {
+            background-color: #c2185b;
+            transform: scale(1.1);
+        }
+
+        #no-btn {
+            background-color: #fff;
+            color: #333;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .success-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .success-content p {
+            font-size: 1.5rem;
+            margin: 10px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-card">
+        <div id="content-wrapper">
+            <img id="display-image" src="./img/cute-character.png" alt="cute character">
+            <h1 id="question">Will you be my Valentine?</h1>
+            
+            <div class="buttons" id="button-group">
+                <button id="yes-btn">Yes</button>
+                <button id="no-btn">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const container = document.getElementById('content-wrapper');
+
+        // Logic for the runaway "No" button
+        noBtn.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+        });
+
+        // Logic for the "Yes" click
+        yesBtn.addEventListener('click', () => {
+            container.innerHTML = `
+                <div class="success-content">
+                    <h1>💖 YAY!!! 💖</h1>
+                    <p>Best decision ever 👍</p>
+                    <img src="./img/celebration.png" alt="celebration" style="width: 250px; border-radius: 10px;">
+                    <p>I love you 💚</p>
+                </div>
+            `;
+            
+            document.getElementById('main-card').style.backgroundColor = 'transparent';
+            document.getElementById('main-card').style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>
