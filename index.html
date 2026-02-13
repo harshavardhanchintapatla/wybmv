@@ -9,20 +9,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #fce4ec;
             font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            padding: 20px;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             padding: 40px;
             border-radius: 30px;
             text-align: center;
-            max-width: 500px;
-            width: 90%;
+            max-width: 650px;
+            width: 100%;
         }
 
         #display-image {
@@ -34,45 +35,82 @@
         h1 {
             font-size: 2.5rem;
             color: #333;
+            line-height: 1.4;
+            margin: 20px 0;
+        }
+
+        .question-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 15px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .answer-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.8;
+            white-space: pre-line;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .answer-box.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .answer-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 15px;
+            margin: 15px 0;
         }
 
         .buttons {
-            margin-top: 30px;
             display: flex;
             justify-content: center;
-            gap: 20px;
-            min-height: 50px;
+            gap: 15px;
+            margin-top: 15px;
         }
 
         button {
-            padding: 12px 30px;
-            font-size: 1.2rem;
+            padding: 12px 35px;
+            font-size: 1.1rem;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        #yes-btn {
+        .yes-btn {
             background-color: #e91e63;
             color: white;
         }
 
-        #yes-btn:hover {
+        .yes-btn:hover {
             background-color: #c2185b;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
-        #no-btn {
+        .no-btn {
             background-color: #fff;
             color: #333;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .success-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             animation: fadeIn 0.5s ease-in;
         }
 
@@ -81,9 +119,32 @@
             margin: 10px 0;
         }
 
+        .celebration-img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .question-text {
+                font-size: 1.1rem;
+            }
+            .answer-box {
+                font-size: 1rem;
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -95,40 +156,113 @@
             <h1 id="question">Will you be my Valentine?</h1>
             
             <div class="buttons" id="button-group">
-                <button id="yes-btn">Yes</button>
-                <button id="no-btn">No</button>
+                <button class="yes-btn" id="main-yes-btn">Yes</button>
+                <button class="no-btn" id="main-no-btn">No</button>
             </div>
         </div>
     </div>
 
     <script>
-        const noBtn = document.getElementById('no-btn');
-        const yesBtn = document.getElementById('yes-btn');
-        const container = document.getElementById('content-wrapper');
-
-        // Logic for the runaway "No" button
-        noBtn.addEventListener('mouseover', () => {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
+        let noBtns = [];
+        
+        // Initial No button movement
+        const mainNoBtn = document.getElementById('main-no-btn');
+        mainNoBtn.addEventListener('mouseover', () => moveButton(mainNoBtn));
+        mainNoBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveButton(mainNoBtn);
         });
 
-        // Logic for the "Yes" click
-        yesBtn.addEventListener('click', () => {
-            container.innerHTML = `
+        function moveButton(btn) {
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 100);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 100);
+            
+            btn.style.position = 'fixed';
+            btn.style.left = `${x}px`;
+            btn.style.top = `${y}px`;
+        }
+
+        // Main Yes button click
+        document.getElementById('main-yes-btn').addEventListener('click', () => {
+            document.getElementById('content-wrapper').innerHTML = `
                 <div class="success-content">
                     <h1>💖 YAY!!! 💖</h1>
-                    <p>Best decision ever ❤️</p>
-                    <img src="./img/celebration.png" alt="celebration" style="width: 250px; border-radius: 10px;">
-                    <p>I love you 💚</p>
+                    <p style="font-size: 1.5rem;">Best decision ever 💖</p>
+                    <img src="./img/celebration.png" alt="celebration" class="celebration-img">
+                    
+                    <!-- Question 1 Section -->
+                    <div class="question-section" id="q1-section">
+                        <div class="question-text">Naa Heart nee gruinchi emanukuntundho vindham anukunntunnava?</div>
+                        <div class="buttons">
+                            <button class="yes-btn" id="q1-yes">Yes</button>
+                            <button class="no-btn" id="q1-no">No</button>
+                        </div>
+                        <div class="answer-box" id="answer1">
+                            <img src="./img/answer1.png" alt="answer 1" class="answer-image">
+                            <div>Prati kshanamu kshanamu nee
+Anuvu anuvulanu
+kalagannadi naa eye👁️
+
+Inni kalala phalitamuna
+kalasinaavu nuvu teeyati
+ee nizamai</div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 Section -->
+                    <div class="question-section" id="q2-section">
+                        <div class="question-text">Accept chesav ga ninnu ela choosukuntaano telsukovali anukuntunnava?</div>
+                        <div class="buttons">
+                            <button class="yes-btn" id="q2-yes">Yes</button>
+                            <button class="no-btn" id="q2-no">No</button>
+                        </div>
+                        <div class="answer-box" id="answer2">
+                            <img src="./img/answer2.png" alt="answer 2" class="answer-image">
+                            <div>Vidiga ninnodalanu nekem kanivannuu
+kadile nekalaku praanam nenuuu
+heymantavooo………
+heymantavooo………
+
+i love you ani palikinadee ninu taakina kaasainaa
+aligina na cheli navvuloo ne premani chusthunaa
+
+you are my everything</div>
+                        </div>
+                    </div>
                 </div>
             `;
+
+            // Attach event listeners to question 1 buttons
+            const q1Yes = document.getElementById('q1-yes');
+            const q1No = document.getElementById('q1-no');
             
-            document.getElementById('main-card').style.backgroundColor = 'transparent';
-            document.getElementById('main-card').style.boxShadow = 'none';
+            q1Yes.addEventListener('click', () => {
+                document.getElementById('answer1').classList.add('show');
+                q1Yes.style.display = 'none';
+                q1No.style.display = 'none';
+            });
+            
+            q1No.addEventListener('mouseover', () => moveButton(q1No));
+            q1No.addEventListener('click', (e) => {
+                e.preventDefault();
+                moveButton(q1No);
+            });
+
+            // Attach event listeners to question 2 buttons
+            const q2Yes = document.getElementById('q2-yes');
+            const q2No = document.getElementById('q2-no');
+            
+            q2Yes.addEventListener('click', () => {
+                document.getElementById('answer2').classList.add('show');
+                q2Yes.style.display = 'none';
+                q2No.style.display = 'none';
+            });
+            
+            q2No.addEventListener('mouseover', () => moveButton(q2No));
+            q2No.addEventListener('click', (e) => {
+                e.preventDefault();
+                moveButton(q2No);
+            });
         });
     </script>
 </body>
